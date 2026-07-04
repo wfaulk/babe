@@ -1,3 +1,6 @@
+# To use:
+# stdbuf -oL blew exec "connect -n iP900BPB; sub -b fff0; sub fff1; sleep 0" | awk -f [thisfile]
+
 function hex2dec(h) {
     h = tolower(h)
     n = 0
