@@ -108,7 +108,7 @@ percentages [permillages?].) `3E` and the two `00`s are unchanging. The
 and/or errors, such as "Finger Removed". It's possible some of the `00`s
 are intended to be part of the data.
 
-## iHealth P03
+## iHealth PO3
 
 BLE Advertised Name: `Pulse Oximeter`
 
@@ -138,4 +138,4 @@ Service 636F6D2E-6A69-7561-6E2E-504F56313100
     └── 2901  Characteristic User Descriptor
 ```
 
-I have yet to get this to pruduce any useful data.
+I have yet to get this to produce any useful data.
