@@ -3,9 +3,16 @@
 I ordered several devices. I have three on hand right now, and I was
 surprised to find that the protocol is different for each of them.
 
+## Tools used for analysis
+
+* [`blew`](https://github.com/stass/blew) — MacOS BLE utility
+* [LightBlue](https://punchthrough.com/resources/lightblue/) — Android BLE utility
+
 ## Wellue/Viatom KS-60FW
 
-GATT Scan:
+BLE Advertised Name: `KS-60FW 4482`
+
+GATT Tree:
 
 ```
 Service 6E400001-B5A3-F393-E0A9-E50E24DCCA9E
@@ -49,3 +56,86 @@ other data: Sp0₂, Pulse Rate, and Perfusion Index. Sp0₂ and Pulse Rate
 seem to update on-device more than once per second, so I don't think that
 they're in data type 2. Perfusion Index may update less frequently, so maybe
 it's in data type 2.
+
+## Innovo iP900BP-B
+
+BLE Advertised Name: `iP900BPB`
+
+GATT Tree:
+
+```
+Service 180A  Device Information
+├── 2A24  Model Number String  [read]  = C228_D4
+├── 2A25  Serial Number String  [read]  = 433232385F4434
+├── 2A28  Software Revision String  [read]  = 1.0.0
+└── 2A29  Manufacturer Name String  [read]  = ChoiceMMed
+
+Service 180F  Battery Service
+└── 2A19  Battery Level  [read]  = 82
+    ├── 2904  Characteristic Presentation Format
+    └── 2902  Client Characteristic Configuration
+
+Service 6E400001-B5A3-F393-E0A9-E50E24DCCA9E
+├── FFF0  [indicate]
+│   └── 2902  Client Characteristic Configuration
+├── FFF1  [notify]
+│   └── 2902  Client Characteristic Configuration
+└── FFF2  [read]  = 43002000240800
+
+Service 00000001-0000-6465-6D6D-65636C6F6843
+├── 00000002-0000-6465-6D6D-65636C6F6843  [read]  = f650d8212b00
+│   └── 2902  Client Characteristic Configuration
+├── 00000003-0000-6465-6D6D-65636C6F6843  [notify]
+│   └── 2902  Client Characteristic Configuration
+├── 00000004-0000-6465-6D6D-65636C6F6843  [write]
+└── 00000005-0000-6465-6D6D-65636C6F6843  [read]  = 00
+```
+
+In order to produce data, both `FFF0` and `FFF1` must be subscribed to,
+after which data will be produced on `FFF1`.
+
+The data is in one of two formats:
+
+1. `01xx`
+2. `3Ess00pp00rr2000000000iiF0`
+
+Data type 1 is produced approximately 24 times per second and the `xx`
+octet is the pleth datapoint. Data type 2 is produced once per second
+and contains SpO₂(`ss`), pulse rate(`pp`), respiration rate(`rr`), and
+perfusion index(`ii`). (Perfusion index is reported in tenths of
+percentages [permillages?].) `3E` and the two `00`s are unchanging. The
+`2000000000` and `F0` change occasionally, and seem to indicate status
+and/or errors, such as "Finger Removed". It's possible some of the `00`s
+are intended to be part of the data.
+
+## iHealth P03
+
+BLE Advertised Name: `Pulse Oximeter`
+
+GATT Tree:
+
+```
+Service 180A  Device Information
+├── 2A23  System ID  [read]  = 0000000000000000
+├── 2A24  Model Number String  [read]  = PO3 11070
+├── 2A25  Serial Number String  [read]  = e04e7a8e675d
+├── 2A26  Firmware Revision String  [read]  = 324
+├── 2A27  Hardware Revision String  [read]  = 800
+├── 2A28  Software Revision String  [read]  = 180
+├── 2A29  Manufacturer Name String  [read]  = iHealth
+├── 2A2A  IEEE 11073-20601 Regulatory Certification Data List  [read]  = fe006578706572696d656e74616c
+├── 2A50  PnP ID  [read]
+│     Vendor ID Source: 1
+│     Vendor ID: 2007
+│     Product ID: 0
+│     Product Version: 272
+├── 2A30  Position 3D  [read]  = 636f6d2e6a6975616e2e504f56313100
+└── 2A31  Scan Refresh  [read]  = 50756c7365204f78696d657465720000
+
+Service 636F6D2E-6A69-7561-6E2E-504F56313100
+└── 7274782E-6A69-7561-6E2E-504F56313100  [write, writeNoResp, notify]
+    ├── 2902  Client Characteristic Configuration
+    └── 2901  Characteristic User Descriptor
+```
+
+I have yet to get this to pruduce any useful data.
