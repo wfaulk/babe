@@ -139,3 +139,14 @@ Service 636F6D2E-6A69-7561-6E2E-504F56313100
 ```
 
 I have yet to get this to produce any useful data.
+
+Turns out that this is likely encrypted to prevent any access to the
+data that's not approved by the manufacturer. ([source](https://stackoverflow.com/a/79836593))
+Notably, it doesn't seem to be anything that prevents unauthorized access
+to the device. Someone could still sidle up next to a person using one of
+these and get data from it without their knowledge. [The manufacturer
+has an SDK](https://dev.ihealthlabs.com/) that requires signing up
+for a developer account. This all feels like claiming your personal
+medical information as their own. I am not interested in supporting this,
+and nor should you be. You should boycott this device and also the
+manufacturer in general.
