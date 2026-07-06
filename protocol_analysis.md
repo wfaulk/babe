@@ -108,6 +108,49 @@ percentages [permillages?].) `3E` and the two `00`s are unchanging. The
 and/or errors, such as "Finger Removed". It's possible some of the `00`s
 are intended to be part of the data.
 
+## Zacurate 500E-B
+
+BLE Advertised Name: `500E-B`
+
+GATT Tree:
+
+```
+Service 180A  Device Information
+├── 2A24  Model Number String  [read]  = C228_D4
+├── 2A25  Serial Number String  [read]  = 433232385F4434
+├── 2A28  Software Revision String  [read]  = 1.0.0
+└── 2A29  Manufacturer Name String  [read]  = ChoiceMMed
+
+Service 180F  Battery Service
+└── 2A19  Battery Level  [read]  = 100
+    ├── 2904  Characteristic Presentation Format
+    └── 2902  Client Characteristic Configuration
+
+Service 6E400001-B5A3-F393-E0A9-E50E24DCCA9E
+├── FFF0  [indicate]
+│   └── 2902  Client Characteristic Configuration
+├── FFF1  [notify]
+│   └── 2902  Client Characteristic Configuration
+└── FFF2  [read]  = 43002000240800
+
+Service 00000001-0000-6465-6D6D-65636C6F6843
+├── 00000002-0000-6465-6D6D-65636C6F6843  [read]  = ed9b676d0f68
+│   └── 2902  Client Characteristic Configuration
+├── 00000003-0000-6465-6D6D-65636C6F6843  [notify]
+│   └── 2902  Client Characteristic Configuration
+├── 00000004-0000-6465-6D6D-65636C6F6843  [write]
+└── 00000005-0000-6465-6D6D-65636C6F6843  [read]  = 00
+
+Service FF00
+├── FF01  [read, write, writeNoResp, notify]  = 000000000000000000000000000000000000000000
+│   └── 2902  Client Characteristic Configuration
+├── FF02  [read, write, writeNoResp]  = 000000000000000000000000000000000000000000
+└── FF03  [read, write, writeNoResp]  = 00
+```
+
+This functions identically to the "Innovo iP900BP-B", down to the "random"
+service UUIDs being the same.
+
 ## iHealth PO3
 
 BLE Advertised Name: `Pulse Oximeter`
